@@ -12,16 +12,27 @@ The kit uses the following Go packages which can be easily replaced with your ow
 since their usages are mostly localized and abstracted. 
 
 * Echo: [Go Echo](https://github.com/labstack/echo/v4)
+* MongoDB Driver: [Mongo Driver](https://www.mongodb.com/docs/drivers/go/current/)
+* GO Validator: [Validator](https://github.com/go-playground/validator)
+* GO Environment: [Go Environment](https://github.com/joho/godotenv)
 
 
 ## Project Structure
 ```
 ├── configs
+├── controllers
+├── models
+├── responses
+├── routes
 └── main.go
 ```
 
 ## API
 
 #### /user
-* `GET` : Get all projects
+* `GET` : Get all user
 * `POST` : Create a new user
+
+#### /user/:id
+* `PUT` : Edit user
+* `DELETE` : Delete user
