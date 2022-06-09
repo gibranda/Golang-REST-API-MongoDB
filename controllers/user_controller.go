@@ -62,3 +62,42 @@ func GetAUser(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.UserResponse{Status: http.StatusOK, Message: "Success", Data: &echo.Map{"data": user}})
 }
+
+func EditAUser(c echo.Context) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	userId := c.Param("userId")
+	var user models.User
+	defer cancel()
+
+	objId, _ := primitive.ObjectIDFromHex(userId)
+
+	//validate the request body
+	if err := c.Bind(&user); err != nil {
+		return c.JSON(http.StatusBadRequest, responses.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: &echo.Map{"data": err.Error()}})
+	}
+
+	//use the validator library to validate required fields
+	if validationErr := validate.Struct(&user); validationErr != nil {
+		return c.JSON(http.StatusBadRequest, responses.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: &echo.Map{"data": validationErr.Error()}})
+	}
+
+	update := bson.M{"name": user.Name, "location": user.Location, "title": user.Title}
+
+	result, err := userCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.UserResponse{Status: http.StatusInternalServerError, Message: "error", Data: &echo.Map{"data": err.Error()}})
+	}
+
+	//get updated user details
+	var updatedUser models.User
+	if result.MatchedCount == 1 {
+		err := userCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&updatedUser)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, responses.UserResponse{Status: http.StatusInternalServerError, Message: "error", Data: &echo.Map{"data": err.Error()}})
+		}
+	}
+
+	return c.JSON(http.StatusOK, responses.UserResponse{Status: http.StatusOK, Message: "success", Data: &echo.Map{"data": updatedUser}})
+}

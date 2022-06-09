@@ -9,4 +9,5 @@ import (
 func UserRoute(e *echo.Echo) {
 	e.POST("/user", controllers.CreateUser)
 	e.GET("/user/:userId", controllers.GetAUser)
+	e.PUT("/user/:userId", controllers.EditAUser)
 }
