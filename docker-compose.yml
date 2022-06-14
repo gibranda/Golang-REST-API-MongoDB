@@ -1,0 +1,12 @@
+version: '3'
+services:
+  app:
+    container_name: full_app
+    build: .
+    ports: 
+      - 7050:7050 
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    environment:
+      - MONGOURI=mongodb+srv://pasamandev:pasamandev@cluster0.mudgo.mongodb.net/?retryWrites=true&w=majority
