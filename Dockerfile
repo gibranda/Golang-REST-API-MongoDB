@@ -1,6 +1,4 @@
-FROM golang:1.15.6-alpine3.12
-
-RUN apk --no-cache add gcc g++ make git
+FROM golang:1.18-bullseye
 
 LABEL Maintainer="Gibranda <gibranda.randa@gmail.com>"
 
@@ -10,12 +8,6 @@ COPY . .
 
 RUN go get -d -v ./...
 
-RUN go install -v ./...
+EXPOSE 6000
 
-RUN go build -o main .
-## Our start command which kicks off
-## our newly created binary executable
-
-EXPOSE 7050
-
-CMD ["/app/main"]
+CMD ["go", "run", "main.go"]
