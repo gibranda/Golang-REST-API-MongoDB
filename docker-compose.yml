@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      MONGOURI: mongodb+srv://pasamandev:pasamandev@cluster0.mudgo.mongodb.net/?retryWrites=true&w=majority
+      MONGOURI:
     ports:
       - 6000:6000
     restart: on-failure
